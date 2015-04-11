@@ -28,9 +28,7 @@ typedef enum
 //设置请求数据类型
 +(void)setNetHttpContentType:(NSSet*)data;
 
-+(void)sendRequest:(NSDictionary*) data Trade:(NSString*) trade Target:(id)inTarget Action:(SEL)inAction HttpType:(HttpType)httpType;
++(void)sendRequest:(NSDictionary*) data Trade:(NSString*)trade HttpType:(HttpType)httpType Black:(void(^)(id data))black;
 //data:数据  files:文件路径  trade:请求头   inTarget:代理   inAction:返回方法
-+(void)sendPostDataRequest:(NSDictionary*) data Files:(NSDictionary*) files Trade:(NSString*) trade Target:(id)inTarget Action:(SEL)inAction;
-
-
++(void)sendPostDataRequest:(NSDictionary*) data Files:(NSDictionary*) files Trade:(NSString*) trade Black:(void(^)(id data))black;
 @end

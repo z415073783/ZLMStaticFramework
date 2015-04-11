@@ -90,7 +90,7 @@
 //    }
 //    NewVC.tabBarItem.image = [UIImage imageNamed:@"1a.png"];
 //    UINavigationController* NewNC = [[UINavigationController alloc]initWithRootViewController:NewVC];
-//    [NewNC.navigationBar setBackgroundImage:[UIImage imageNamed:@"底栏64.png"] forBarMetrics:UIBarMetricsDefault];
+//    [NewNC.navigationBar setBackgroundImage:[UIImage imageNamed:@"底栏64.png"] forBarMetrics:UIBarMetricsDefault];//顶部条图片
 //    //设置标题
 //    UILabel* titleView = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 30)];
 //    titleView.text = navigationTitle;

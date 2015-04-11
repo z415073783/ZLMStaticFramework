@@ -28,7 +28,6 @@
     [[NetHttpManage getInstance] setUserName:userName];
     [[NetHttpManage getInstance] setPassword:password];
     [[[NetHttpManage getInstance] manager].requestSerializer setAuthorizationHeaderFieldWithUsername:[[NetHttpManage getInstance] userName]  password:[[NetHttpManage getInstance] password]];
- 
 }
 +(void)setNetHttpContentType:(NSSet*)data
 {
@@ -36,7 +35,7 @@
 }
 
 
-+(void)sendRequest:(NSDictionary*) data Trade:(NSString*) trade Target:(id)inTarget Action:(SEL)inAction HttpType:(HttpType)httpType
++(void)sendRequest:(NSDictionary*)data Trade:(NSString*) trade HttpType:(HttpType)httpType Black:(void(^)(id))black
 {
     NSMutableString* url = [NSMutableString stringWithFormat:@"http://%@/",[NetHttpManage getInstance].ipconfig];
     [url appendFormat:@"%@",trade];
@@ -48,24 +47,22 @@
         {
             [manager GET:url parameters:data success:^(AFHTTPRequestOperation *operation, id responseObject)
              {
-                 [NetHttpManage dealResultWithTarget:inTarget Action:inAction Response:responseObject];
+                 black(responseObject);
              } failure:^(AFHTTPRequestOperation *operation, NSError *error)
              {
-                 [NetHttpManage resultFailWithTarget:inTarget Action:inAction Error:error];
-            }];
+                 black(nil);
+             }];
         }
             break;
         case HttpType_Post:
         {
             [manager POST:url parameters:data success:^(AFHTTPRequestOperation *operation, id responseObject)
             {
-                [NetHttpManage dealResultWithTarget:inTarget Action:inAction Response:responseObject];
-
+                black(responseObject);
             } failure:^(AFHTTPRequestOperation *operation, NSError *error)
             {
-                [NetHttpManage resultFailWithTarget:inTarget Action:inAction Error:error];
+                black(nil);
             }];
-
         }
             break;
         default:
@@ -73,9 +70,7 @@
     }
 }
 
-
-
-+(void)sendPostDataRequest:(NSDictionary*) data Files:(NSDictionary*) files Trade:(NSString*) trade Target:(id)inTarget Action:(SEL)inAction
++(void)sendPostDataRequest:(NSDictionary*) data Files:(NSDictionary*) files Trade:(NSString*) trade Black:(void(^)(id data))black
 {
     NSMutableString* url = [NSMutableString stringWithFormat:@"http://%@/",[NetHttpManage getInstance].ipconfig];
     [url appendFormat:@"tradeUrl:%@",trade];
@@ -88,12 +83,12 @@
             [formData appendPartWithFileURL:[NSURL URLWithString:[files objectForKey:[allKey objectAtIndex:i]]] name:[allKey objectAtIndex:i] error:nil];
         }
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [NetHttpManage dealResultWithTarget:inTarget Action:inAction Response:responseObject];
+        black(responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [NetHttpManage resultFailWithTarget:inTarget Action:inAction Error:error];
+        black(nil);
     }];
 }
-
+//返回失败
 +(void)resultFailWithTarget:(id)inTarget Action:(SEL)inAction Error:(NSError*)error
 {
     if (inTarget == nil || inAction == nil) {
@@ -105,6 +100,7 @@
                    withObject:@{@"msg" : @"error"}];
     
 }
+//返回成功
 +(void)dealResultWithTarget:(id)inTarget Action:(SEL)inAction Response:(id)responseObject
 {
     if (inTarget == nil || inAction == nil)

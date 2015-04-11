@@ -215,8 +215,6 @@
         //颜色
         int markColor = [[item objectAtIndex:1] intValue];
         
-        
-        
         //计算相差天数
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents* dicComp = [[NSDateComponents alloc]init];
